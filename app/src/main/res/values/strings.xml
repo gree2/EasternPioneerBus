@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Nav Drawer Menu Items -->
+    <string-array name="nav_drawer_items">
+        <item>两广线</item>
+        <item>望京线</item>
+        <item>天桥线</item>
+        <item>卢沟桥线</item>
+        <item>东线</item>
+        <item>中线</item>
+        <item>南线</item>
+        <item>燕山线</item>
+        <item>西线</item>
+        <item>学院线</item>
+        <item>石景山线</item>
+        <item>通州线</item>
+        <item>良乡大学城</item>
+        <item>大兴线</item>
+        <item>高校专线</item>
+        <item>晚班班车一线</item>
+        <item>晚班班车二线</item>
+    </string-array>
+
+    <!-- Nav Drawer List Item Icons -->
+    <!-- Keep them in order as the titles are in -->
+    <array name="nav_drawer_icons">
+        <item>@drawable/directions_bus</item>
+        <item>@drawable/directions_bus</item>
+        <item>@drawable/directions_bus</item>
+        <item>@drawable/directions_bus</item>
+        <item>@drawable/directions_bus</item>
+        <item>@drawable/directions_bus</item>
+        <item>@drawable/directions_bus</item>
+        <item>@drawable/directions_bus</item>
+        <item>@drawable/directions_bus</item>
+        <item>@drawable/directions_bus</item>
+        <item>@drawable/directions_bus</item>
+        <item>@drawable/directions_bus</item>
+        <item>@drawable/directions_bus</item>
+        <item>@drawable/directions_bus</item>
+        <item>@drawable/directions_bus</item>
+        <item>@drawable/directions_bus</item>
+        <item>@drawable/directions_bus</item>
+    </array>
+
+    <string name="app_name">东方时尚班车</string>
+    <string name="stop_name">车站名</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="title_activity_bus_stop_detail">车站详情</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="class_07">07:00 上课经停时间：</string>
+    <string name="class_09">09:00 上课经停时间：</string>
+    <string name="class_13">13:00 上课经停时间：</string>
+    <string name="class_17">17:00 上课经停时间：</string>
+    <string name="stop_desc">位置说明：</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="message_zoom_touch_expand">点击图片看大图</string>
+    <string name="description_zoom_touch_close">点击图片返回</string>
+
+</resources>

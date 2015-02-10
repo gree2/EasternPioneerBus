@@ -22,8 +22,7 @@
         </activity>
         <activity
             android:name=".BusStopDetailActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_bus_stop_detail" >
+            android:screenOrientation="portrait" >
         </activity>
     </application>
 

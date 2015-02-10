@@ -14,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -66,7 +65,7 @@ public class BusStopDetailActivity extends FragmentActivity {
         view = (TextView) findViewById(R.id.stop_detail_text);
         view.setText(getString(R.string.stop_desc) + item.getStopDesc());
 
-        setTitle(getString(R.string.title_activity_bus_stop_detail) + "：" + item.getStopName());
+        setTitle(item.getLineName() + "-" + item.getStopName());
 
         // Hook up clicks on the thumbnail views.
         AddAllButton();

@@ -49,5 +49,5 @@ before_script:
   - emulator -avd test -no-skin -no-audio -no-window &
   - adb wait-for-device
   - adb shell input keyevent 82 &
-
+  - chmod a+x gradlew
 script: ./gradlew connectedAndroidTest

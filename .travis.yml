@@ -27,6 +27,5 @@ before_script:
   - unzip gradle-2.0-bin.zip
   - export GRADLE_HOME=$PWD/gradle-2.0
   - export PATH=$GRADLE_HOME/bin:$PATH
-  - sudo chmod a+x gradle
 
-script: ./gradle assemble
+script: gradle assemble

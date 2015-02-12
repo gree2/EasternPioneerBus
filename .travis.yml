@@ -23,9 +23,9 @@ before_script:
   - adb wait-for-device
   - adb shell input keyevent 82 &
   # Gradle
-  - wget http://services.gradle.org/distributions/gradle-2.0-bin.zip
-  - unzip gradle-2.0-bin.zip
-  - export GRADLE_HOME=$PWD/gradle-2.0
+  - wget http://services.gradle.org/distributions/gradle-2.2-bin.zip
+  - unzip gradle-2.2-bin.zip
+  - export GRADLE_HOME=$PWD/gradle-2.2
   - export PATH=$GRADLE_HOME/bin:$PATH
 
 script: gradle assemble

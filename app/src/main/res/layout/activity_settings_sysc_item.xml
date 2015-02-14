@@ -4,24 +4,25 @@
     android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/stop_image"
+        android:id="@+id/bus_line_image"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_centerVertical="true"
         android:layout_marginLeft="10dp"
         android:contentDescription="@string/app_name"
-        android:src="@drawable/location" />
+        android:src="@drawable/directions_bus" />
 
     <TextView
-        android:id="@+id/stop_name"
+        android:id="@+id/bus_line_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@id/stop_image"
-        android:text="@string/stop_name" />
+        android:layout_toRightOf="@id/bus_line_image"
+        android:text="@string/sync_data" />
 
     <ImageView
+        android:id="@+id/bus_line_download"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
@@ -29,6 +30,7 @@
         android:layout_marginRight="10dp"
         android:contentDescription="@string/app_name"
         android:scaleType="fitXY"
-        android:src="@drawable/keyboard_arrow_right" />
+        android:src="@drawable/file_download" />
 
 </RelativeLayout>
+

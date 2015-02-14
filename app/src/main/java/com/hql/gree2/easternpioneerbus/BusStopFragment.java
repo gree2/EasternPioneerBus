@@ -1,8 +1,6 @@
 package com.hql.gree2.easternpioneerbus;
 
-import android.app.Activity;
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -17,7 +15,7 @@ import com.hql.gree2.easternpioneerbus.model.BusStopItem;
 
 import java.util.ArrayList;
 
-public class BusStopFragment extends Fragment implements AdapterView.OnItemClickListener{
+public class BusStopFragment extends Fragment implements AdapterView.OnItemClickListener {
 
     private BusStopAdapter adapter;
 
@@ -36,7 +34,7 @@ public class BusStopFragment extends Fragment implements AdapterView.OnItemClick
         View rootView = inflater.inflate(R.layout.fragment_bus_stop, container, false);
 
         items = getArguments().getParcelableArrayList("BusStops");
-        adapter = new BusStopAdapter(getActivity() ,items);
+        adapter = new BusStopAdapter(getActivity(), items);
 
         stopsList = (ListView) rootView.findViewById(R.id.stops_list);
         stopsList.setAdapter(adapter);
@@ -48,20 +46,9 @@ public class BusStopFragment extends Fragment implements AdapterView.OnItemClick
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-//        Fragment fragment = new BusStopDetailFragment();
-//
-//        Bundle bundle = new Bundle();
-//        bundle.putParcelable("BusStop", (Parcelable) adapter.getItem(position));
-//        fragment.setArguments(bundle);
-//
-//        FragmentManager fragmentManager = getFragmentManager();
-//        fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
-
         Intent intent = new Intent(getActivity().getApplicationContext(),
                 BusStopDetailActivity.class);
         intent.putExtra("BusStop", (Parcelable) adapter.getItem(position));
         startActivity(intent);
-
     }
 }

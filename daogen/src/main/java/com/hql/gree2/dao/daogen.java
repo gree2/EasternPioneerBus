@@ -20,7 +20,8 @@ public class daogen {
         busLine.addIdProperty();
         busLine.addIntProperty("lineIndex");
         busLine.addStringProperty("lineName");
-        busLine.addStringProperty("lineDesc");
+        busLine.addStringProperty("lineCode");
+        busLine.addBooleanProperty("lineSync");
 
         // entity busstop
         Entity busStop = schema.addEntity("BusStop");

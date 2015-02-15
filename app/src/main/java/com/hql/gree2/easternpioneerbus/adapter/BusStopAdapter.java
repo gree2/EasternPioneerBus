@@ -8,18 +8,17 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.hql.gree2.easternpioneerbus.R;
-import com.hql.gree2.easternpioneerbus.model.BusStopItem;
+import com.hql.gree2.easternpioneerbus.dao.BusStop;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class BusStopAdapter extends BaseAdapter {
 
     private Context context;
 
-    private List<BusStopItem> items = new ArrayList<>();
+    private List<BusStop> items;
 
-    public BusStopAdapter(Context context, ArrayList<BusStopItem> items) {
+    public BusStopAdapter(Context context, List<BusStop> items) {
         this.context = context;
         this.items = items;
     }

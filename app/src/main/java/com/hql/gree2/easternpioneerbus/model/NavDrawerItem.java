@@ -1,5 +1,7 @@
 package com.hql.gree2.easternpioneerbus.model;
 
+import com.hql.gree2.easternpioneerbus.R;
+
 public class NavDrawerItem {
 
     private String title;
@@ -11,14 +13,14 @@ public class NavDrawerItem {
     public NavDrawerItem() {
     }
 
-    public NavDrawerItem(String title, int icon) {
+    public NavDrawerItem(String title) {
         this.title = title;
-        this.icon = icon;
+        this.icon = R.drawable.directions_bus;
     }
 
-    public NavDrawerItem(String title, int icon, boolean isCounterVisible, String count) {
+    public NavDrawerItem(String title, boolean isCounterVisible, String count) {
         this.title = title;
-        this.icon = icon;
+        this.icon = R.drawable.directions_bus;
         this.isCounterVisible = isCounterVisible;
         this.count = count;
     }

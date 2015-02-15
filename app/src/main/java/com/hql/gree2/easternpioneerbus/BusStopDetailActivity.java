@@ -78,8 +78,8 @@ public class BusStopDetailActivity extends FragmentActivity {
     public void AddAllButton() {
 
         // no image
-        if (0 == item.getImages().size()){
-            RelativeLayout layout = (RelativeLayout)findViewById(R.id.relative_visibility);
+        if (0 == item.getImages().size()) {
+            RelativeLayout layout = (RelativeLayout) findViewById(R.id.relative_visibility);
             layout.setVisibility(View.INVISIBLE);
 
             View view = findViewById(R.id.view_visibility);

@@ -2,8 +2,6 @@ package com.hql.gree2.easternpioneerbus;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.ListView;
 
 import com.hql.gree2.easternpioneerbus.adapter.SettingsSyncAdapter;
@@ -55,9 +53,9 @@ public class SettingsSyncActivity extends Activity {
         }
     }
 
-    private void initBusLines(){
+    private void initBusLines() {
         busLines = databaseManager.listBusLines();
-        if (0 == busLines.size()){
+        if (0 == busLines.size()) {
             PopulateBusLines();
         }
         busLines = databaseManager.listBusLines();
@@ -79,7 +77,7 @@ public class SettingsSyncActivity extends Activity {
 
     @Override
     protected void onRestart() {
-        if (databaseManager == null){
+        if (databaseManager == null) {
             databaseManager = new DatabaseManager(this);
         }
         super.onRestart();
@@ -94,8 +92,7 @@ public class SettingsSyncActivity extends Activity {
 
     @Override
     protected void onStop() {
-        if (databaseManager != null)
-        {
+        if (databaseManager != null) {
             databaseManager.closeDbConnections();
         }
         super.onStop();

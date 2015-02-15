@@ -19,7 +19,7 @@ public class BusStopAdapter extends BaseAdapter {
 
     private List<BusStopItem> items = new ArrayList<>();
 
-    public BusStopAdapter(Context context, ArrayList<BusStopItem> items){
+    public BusStopAdapter(Context context, ArrayList<BusStopItem> items) {
         this.context = context;
         this.items = items;
     }

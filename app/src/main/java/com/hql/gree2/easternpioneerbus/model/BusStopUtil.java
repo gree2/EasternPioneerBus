@@ -10,12 +10,12 @@ public class BusStopUtil {
     InputStream inputStream;
     ArrayList<BusStopItem> busList;
 
-    public BusStopUtil(InputStream inputStream){
+    public BusStopUtil(InputStream inputStream) {
         this.inputStream = inputStream;
         initShuttleBusList();
     }
 
-    private void initShuttleBusList(){
+    private void initShuttleBusList() {
         busList = new ArrayList<>();
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         try {
@@ -27,24 +27,21 @@ public class BusStopUtil {
 //                }
                 busList.add(new BusStopItem(row));
             }
-        }
-        catch (IOException ex) {
-            throw new RuntimeException("Error in reading CSV file: "+ex);
-        }
-        finally {
+        } catch (IOException ex) {
+            throw new RuntimeException("Error in reading CSV file: " + ex);
+        } finally {
             try {
                 inputStream.close();
-            }
-            catch (IOException e) {
-                throw new RuntimeException("Error while closing input stream: "+e);
+            } catch (IOException e) {
+                throw new RuntimeException("Error while closing input stream: " + e);
             }
         }
     }
 
-    public ArrayList<BusStopItem> getBusLineInfoByLineIndex(int lineIndex){
+    public ArrayList<BusStopItem> getBusLineInfoByLineIndex(int lineIndex) {
         ArrayList<BusStopItem> lineList = new ArrayList<>();
-        for(BusStopItem item : busList){
-            if (item.getLineIndex() == lineIndex){
+        for (BusStopItem item : busList) {
+            if (item.getLineIndex() == lineIndex) {
                 lineList.add(item);
             }
         }

@@ -84,6 +84,10 @@
 
     <string name="sync_data">下载线路数据</string>
     <string name="clear_cache">清除图片缓存</string>
+    <string name="clear_cache_question">确实要清除缓存数据？</string>
+    <string name="clear_cache_yes">确定</string>
+    <string name="clear_cache_no">取消</string>
+    <string name="clear_cache_toast">缓存数据清理完毕。</string>
 
 
 </resources>

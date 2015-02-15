@@ -22,7 +22,7 @@
         android:text="@string/sync_data" />
 
     <ImageView
-        android:id="@+id/bus_line_download"
+        android:id="@+id/bus_line_sync"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
@@ -30,7 +30,7 @@
         android:layout_marginRight="10dp"
         android:contentDescription="@string/app_name"
         android:scaleType="fitXY"
-        android:src="@drawable/file_download" />
+        android:src="@drawable/sync" />
 
 </RelativeLayout>
 

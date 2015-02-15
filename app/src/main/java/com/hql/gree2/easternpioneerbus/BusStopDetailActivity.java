@@ -46,6 +46,8 @@ public class BusStopDetailActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // animation
+        overridePendingTransition(R.anim.anim_slide_in, R.anim.anim_slide_hold);
         setContentView(R.layout.activity_bus_stop_detail);
 
         item = getIntent().getParcelableExtra("BusStop");
@@ -288,4 +290,10 @@ public class BusStopDetailActivity extends FragmentActivity {
         });
     }
 
+    @Override
+    protected void onPause() {
+        // animation
+        overridePendingTransition(R.anim.anim_slide_hold, R.anim.anim_slide_out);
+        super.onPause();
+    }
 }

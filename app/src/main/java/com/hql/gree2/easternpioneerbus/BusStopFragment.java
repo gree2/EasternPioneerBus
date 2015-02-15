@@ -35,7 +35,6 @@ public class BusStopFragment extends Fragment implements AdapterView.OnItemClick
 
         items = getArguments().getParcelableArrayList("BusStops");
         adapter = new BusStopAdapter(getActivity(), items);
-
         stopsList = (ListView) rootView.findViewById(R.id.stops_list);
         stopsList.setAdapter(adapter);
         stopsList.setOnItemClickListener(this);
@@ -46,6 +45,7 @@ public class BusStopFragment extends Fragment implements AdapterView.OnItemClick
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        view.setSelected(true);
         Intent intent = new Intent(getActivity().getApplicationContext(),
                 BusStopDetailActivity.class);
         intent.putExtra("BusStop", (Parcelable) adapter.getItem(position));

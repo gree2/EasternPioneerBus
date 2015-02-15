@@ -1,49 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Nav Drawer Menu Items -->
-    <string-array name="nav_drawer_items">
-        <item>两广线</item>
-        <item>望京线</item>
-        <item>天桥线</item>
-        <item>卢沟桥线</item>
-        <item>东线</item>
-        <item>中线</item>
-        <item>南线</item>
-        <item>燕山线</item>
-        <item>西线</item>
-        <item>学院线</item>
-        <item>石景山线</item>
-        <item>通州线</item>
-        <item>良乡大学城</item>
-        <item>大兴线</item>
-        <item>高校专线</item>
-        <item>晚班班车一线</item>
-        <item>晚班班车二线</item>
-    </string-array>
-
-    <!-- Nav Drawer List Item Icons -->
-    <!-- Keep them in order as the titles are in -->
-    <array name="nav_drawer_icons">
-        <item>@drawable/directions_bus</item>
-        <item>@drawable/directions_bus</item>
-        <item>@drawable/directions_bus</item>
-        <item>@drawable/directions_bus</item>
-        <item>@drawable/directions_bus</item>
-        <item>@drawable/directions_bus</item>
-        <item>@drawable/directions_bus</item>
-        <item>@drawable/directions_bus</item>
-        <item>@drawable/directions_bus</item>
-        <item>@drawable/directions_bus</item>
-        <item>@drawable/directions_bus</item>
-        <item>@drawable/directions_bus</item>
-        <item>@drawable/directions_bus</item>
-        <item>@drawable/directions_bus</item>
-        <item>@drawable/directions_bus</item>
-        <item>@drawable/directions_bus</item>
-        <item>@drawable/directions_bus</item>
-    </array>
-
     <!-- bus line code name -->
     <string-array name="bus_line_code_name">
         <item>20130715142458370693,两广线</item>
@@ -88,6 +45,5 @@
     <string name="clear_cache_yes">确定</string>
     <string name="clear_cache_no">取消</string>
     <string name="clear_cache_toast">缓存数据清理完毕。</string>
-
 
 </resources>

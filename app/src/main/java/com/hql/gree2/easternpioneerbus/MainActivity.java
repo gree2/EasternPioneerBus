@@ -5,7 +5,6 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
@@ -17,11 +16,13 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.hql.gree2.easternpioneerbus.adapter.NavDrawerListAdapter;
-import com.hql.gree2.easternpioneerbus.model.BusStopUtil;
+import com.hql.gree2.easternpioneerbus.dao.BusLine;
+import com.hql.gree2.easternpioneerbus.manager.DatabaseManager;
+import com.hql.gree2.easternpioneerbus.manager.IDatabaseManager;
 import com.hql.gree2.easternpioneerbus.model.NavDrawerItem;
 
-import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends Activity {
@@ -36,38 +37,34 @@ public class MainActivity extends Activity {
     // used to store app title
     private CharSequence mTitle;
 
-    // slide menu items
-    private String[] navMenuTitles;
-    private TypedArray navMenuIcons;
-
     private ArrayList<NavDrawerItem> navDrawerItems;
     private NavDrawerListAdapter adapter;
 
-    private BusStopUtil util;
+    //private BusStopUtil util;
+
+    private IDatabaseManager databaseManager;
+
+    private List<BusLine> busLines;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mTitle = mDrawerTitle = getTitle();
-
-        // load slide menu items
-        navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);
-        // nav drawer icons from resources
-        navMenuIcons = getResources().obtainTypedArray(R.array.nav_drawer_icons);
-
+        // findview
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
 
+        // init database & busline
+        databaseManager = new DatabaseManager(this);
+        PopulateBusLines();
+
+        mTitle = mDrawerTitle = getTitle();
         navDrawerItems = new ArrayList<>();
 
-        // adding nav drawer items to array
-        for (int i = 0; i < navMenuTitles.length; i++) {
-            navDrawerItems.add(new NavDrawerItem(navMenuTitles[i], navMenuIcons.getResourceId(i, -1)));
+        for (BusLine busLine : busLines) {
+            navDrawerItems.add(new NavDrawerItem(busLine.getLineName()));
         }
-
-        navMenuIcons.recycle();
 
         mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
 
@@ -99,12 +96,27 @@ public class MainActivity extends Activity {
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
         if (savedInstanceState == null) {
-
-            InputStream inputStream = getResources().openRawResource(R.raw.bus_stop_items);
-            util = new BusStopUtil(inputStream);
             // on first time display view for first nav item
             displayView(0);
         }
+    }
+
+    private void PopulateBusLines() {
+        busLines = databaseManager.listBusLines();
+        if (0 < busLines.size()) {
+            return;
+        }
+        String[] codeNames = getResources().getStringArray(R.array.bus_line_code_name);
+        for (int i = 0; i < codeNames.length; i++) {
+            String[] split = codeNames[i].split(",");
+            BusLine busLine = new BusLine();
+            busLine.setLineCode(split[0]);
+            busLine.setLineName(split[1]);
+            busLine.setLineIndex(i + 1);
+            busLine.setLineSync(false);
+            databaseManager.insertBusLine(busLine);
+        }
+        busLines = databaseManager.listBusLines();
     }
 
     /**
@@ -160,9 +172,9 @@ public class MainActivity extends Activity {
     private void displayView(int position) {
         // update the main content by replacing fragments
         Fragment fragment = null;
-        if (0 <= position && position < navMenuTitles.length) {
+        if (0 <= position && position < busLines.size()) {
             Bundle bundle = new Bundle();
-            bundle.putParcelableArrayList("BusStops", util.getBusLineInfoByLineIndex(position + 1));
+            bundle.putLong("BusLineId", busLines.get(position).getId());
             fragment = new BusStopFragment();
             fragment.setArguments(bundle);
         }
@@ -175,7 +187,7 @@ public class MainActivity extends Activity {
             // update selected item and title, then close the drawer
             mDrawerList.setItemChecked(position, true);
             mDrawerList.setSelection(position);
-            setTitle(navMenuTitles[position]);
+            setTitle(busLines.get(position).getLineName());
             mDrawerLayout.closeDrawer(mDrawerList);
         } else {
             // error in creating fragment
@@ -193,7 +205,6 @@ public class MainActivity extends Activity {
      * When using the ActionBarDrawerToggle, you must call it during
      * onPostCreate() and onConfigurationChanged()...
      */
-
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -206,5 +217,28 @@ public class MainActivity extends Activity {
         super.onConfigurationChanged(newConfig);
         // Pass any configuration change to the drawer toggls
         mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    protected void onRestart() {
+        if (databaseManager == null) {
+            databaseManager = new DatabaseManager(this);
+        }
+        super.onRestart();
+    }
+
+    @Override
+    protected void onResume() {
+        // init database manager
+        databaseManager = DatabaseManager.getInstance(this);
+        super.onResume();
+    }
+
+    @Override
+    protected void onStop() {
+        if (databaseManager != null) {
+            databaseManager.closeDbConnections();
+        }
+        super.onStop();
     }
 }

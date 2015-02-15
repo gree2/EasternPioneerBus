@@ -149,12 +149,15 @@ public class DatabaseManager implements IDatabaseManager {
     }
 
     @Override
-    public List<BusStop> listBusStop() {
+    public List<BusStop> listBusStops(long busLineId) {
         List<BusStop> list = null;
         try {
             openReadableDb();
             BusStopDao dao = daoSession.getBusStopDao();
-            list = dao.loadAll();
+            list = dao.queryBuilder()
+                    .where(BusStopDao.Properties.BusLineId.eq(busLineId))
+                    .orderAsc(BusStopDao.Properties.StopIndex)
+                    .list();
             daoSession.clear();
         } catch (Exception e) {
             e.printStackTrace();
@@ -175,6 +178,20 @@ public class DatabaseManager implements IDatabaseManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public BusStop getBusStopById(long busStopId) {
+        BusStop busStop = null;
+        try {
+            openReadableDb();
+            BusStopDao dao = daoSession.getBusStopDao();
+            busStop = dao.load(busStopId);
+            daoSession.clear();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return busStop;
     }
 
     @Override

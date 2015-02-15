@@ -18,9 +18,6 @@ public class SettingsSyncActivity extends Activity {
     private ListView list;
     private SettingsSyncAdapter adapter;
     private List<BusLine> busLines;
-    /**
-     * Manages the database for this application..
-     */
     private IDatabaseManager databaseManager;
 
     @Override
@@ -36,13 +33,11 @@ public class SettingsSyncActivity extends Activity {
         busLines = new ArrayList<>();
         list = (ListView) findViewById(R.id.listView);
         //
-        refreshUserList();
+        refreshBusLines();
     }
 
-    private void refreshUserList() {
-        //
-        initBusLines();
-
+    private void refreshBusLines() {
+        busLines = databaseManager.listBusLines();
         if (adapter == null) {
             adapter = new SettingsSyncAdapter(this, busLines);
             list.setAdapter(adapter);
@@ -52,28 +47,6 @@ public class SettingsSyncActivity extends Activity {
             adapter.addAll(busLines);
             adapter.notifyDataSetChanged();
             list.setAdapter(adapter);
-        }
-    }
-
-    private void initBusLines() {
-        busLines = databaseManager.listBusLines();
-        if (0 == busLines.size()) {
-            PopulateBusLines();
-        }
-        busLines = databaseManager.listBusLines();
-    }
-
-    private void PopulateBusLines() {
-        String[] codeNames = getResources().getStringArray(R.array.bus_line_code_name);
-        for (int i = 0; i < codeNames.length; i++) {
-            String[] split = codeNames[i].split(",");
-            BusLine busLine = new BusLine();
-            //busLine.setId((long) i);
-            busLine.setLineCode(split[0]);
-            busLine.setLineName(split[1]);
-            busLine.setLineIndex(i + 1);
-            busLine.setLineSync(false);
-            databaseManager.insertBusLine(busLine);
         }
     }
 
@@ -106,5 +79,4 @@ public class SettingsSyncActivity extends Activity {
         overridePendingTransition(R.anim.anim_slide_hold, R.anim.anim_slide_out);
         super.onPause();
     }
-
 }

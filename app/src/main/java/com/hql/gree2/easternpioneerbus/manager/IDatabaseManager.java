@@ -18,9 +18,11 @@ public interface IDatabaseManager {
 
     public void insertBusStop(BusStop busStop);
 
-    public List<BusStop> listBusStop();
+    public List<BusStop> listBusStops(long busLineId);
 
     public void updateBusStop(BusStop busStop);
+
+    public BusStop getBusStopById(long busStopId);
 
     public void insertBusStopImage(BusStopImage busStopImage);
 

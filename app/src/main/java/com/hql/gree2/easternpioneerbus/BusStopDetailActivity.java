@@ -22,7 +22,10 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.hql.gree2.easternpioneerbus.app.AppController;
-import com.hql.gree2.easternpioneerbus.model.BusStopItem;
+import com.hql.gree2.easternpioneerbus.dao.BusStop;
+import com.hql.gree2.easternpioneerbus.dao.BusStopImage;
+import com.hql.gree2.easternpioneerbus.manager.DatabaseManager;
+import com.hql.gree2.easternpioneerbus.manager.IDatabaseManager;
 import com.hql.gree2.easternpioneerbus.volley.util.Const;
 
 
@@ -39,7 +42,7 @@ public class BusStopDetailActivity extends FragmentActivity {
      */
     private int mShortAnimationDuration;
 
-    private BusStopItem item;
+    private BusStop busStop;
 
     private static final String TAG = BusStopDetailActivity.class.getSimpleName();
 
@@ -50,24 +53,27 @@ public class BusStopDetailActivity extends FragmentActivity {
         overridePendingTransition(R.anim.anim_slide_in, R.anim.anim_slide_hold);
         setContentView(R.layout.activity_bus_stop_detail);
 
-        item = getIntent().getParcelableExtra("BusStop");
+        // init database & busline
+        IDatabaseManager databaseManager = new DatabaseManager(this);
+        long busStopId = getIntent().getLongExtra("BusStopId", -1);
+        busStop = databaseManager.getBusStopById(busStopId);
 
         TextView view = (TextView) findViewById(R.id.class_07_text);
-        view.setText(getString(R.string.class_07) + item.getClass07());
+        view.setText(getString(R.string.class_07) + busStop.getClass07());
 
         view = (TextView) findViewById(R.id.class_09_text);
-        view.setText(getString(R.string.class_09) + item.getClass09());
+        view.setText(getString(R.string.class_09) + busStop.getClass09());
 
         view = (TextView) findViewById(R.id.class_13_text);
-        view.setText(getString(R.string.class_13) + item.getClass13());
+        view.setText(getString(R.string.class_13) + busStop.getClass13());
 
         view = (TextView) findViewById(R.id.class_17_text);
-        view.setText(getString(R.string.class_17) + item.getClass17());
+        view.setText(getString(R.string.class_17) + busStop.getClass17());
 
         view = (TextView) findViewById(R.id.stop_detail_text);
-        view.setText(getString(R.string.stop_desc) + item.getStopDesc());
+        view.setText(getString(R.string.stop_desc) + busStop.getStopDesc());
 
-        setTitle(item.getLineName() + "-" + item.getStopName());
+        setTitle(busStop.getBusLine().getLineName() + "-" + busStop.getStopName());
 
         // Hook up clicks on the thumbnail views.
         AddAllButton();
@@ -80,7 +86,7 @@ public class BusStopDetailActivity extends FragmentActivity {
     public void AddAllButton() {
 
         // no image
-        if (0 == item.getImages().size()) {
+        if (0 == busStop.getBusStopImages().size()) {
             RelativeLayout layout = (RelativeLayout) findViewById(R.id.relative_visibility);
             layout.setVisibility(View.INVISIBLE);
 
@@ -92,9 +98,9 @@ public class BusStopDetailActivity extends FragmentActivity {
 
         // do have some images
         LinearLayout linearLayout = (LinearLayout) findViewById(R.id.linera_layout);
-        for (String image : item.getImages()) {
+        for (BusStopImage image : busStop.getBusStopImages()) {
 
-            final String url = Const.URL_IMAGE + image;
+            final String url = Const.URL_IMAGE + image.getImageName();
             // click to see big image
             final TouchHighlightImageButton thumbView = new TouchHighlightImageButton(this);
             thumbView.setImageResource(R.drawable.directions_bus);
@@ -107,8 +113,6 @@ public class BusStopDetailActivity extends FragmentActivity {
             });
             linearLayout.addView(thumbView, new ViewGroup.LayoutParams(100, 100));
         }
-
-
     }
 
     @Override

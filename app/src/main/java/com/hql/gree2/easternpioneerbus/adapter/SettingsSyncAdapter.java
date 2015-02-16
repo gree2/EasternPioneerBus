@@ -103,7 +103,7 @@ public class SettingsSyncAdapter extends ArrayAdapter<BusLine> {
                                 new Response.Listener<String>() {
                                     @Override
                                     public void onResponse(String response) {
-                                        JsoupParseBusLineHtml(busLine, response, download);
+                                        new Thread(new JsoupParseBusLineHtmlThread(busLine, response, download)).start();
                                     }
                                 },
                                 new Response.ErrorListener() {
@@ -134,67 +134,6 @@ public class SettingsSyncAdapter extends ArrayAdapter<BusLine> {
         return rowView;
     }
 
-    private void JsoupParseBusLineHtml(BusLine busLine, String html, ImageView download) {
-
-        final BusLine theBusLine = busLine;
-        final String theHtml = html;
-        final ImageView theSync = download;
-        new Thread(new Runnable() {
-            public void run() {
-                Document doc = Jsoup.parse(theHtml);
-                int stopIndex = 1;
-                Element table = doc.select("table[style=border-collapse:collapse]").first();
-                Element tbody = table.select("tbody").first();
-                Elements trs = tbody.select("tr");
-                // connect to database
-                DatabaseManager databaseManager = new DatabaseManager(getContext());
-                // parse data
-                for (Element tr : trs) {
-                    Elements tds = tr.select("td");
-                    // busstop
-                    BusStop stop = new BusStop();
-                    stop.setBusLine(theBusLine);
-                    stop.setStopIndex(stopIndex);
-                    stop.setStopName(tds.get(0).text().trim());
-                    stop.setStopDesc(tds.get(1).text().trim());
-                    stop.setClass07(tds.get(2).text().trim());
-                    stop.setClass09(tds.get(3).text().trim());
-                    stop.setClass13(tds.get(4).text().trim());
-                    stop.setClass17(tds.get(5).text().trim());
-                    // save data
-                    databaseManager.insertBusStop(stop);
-                    Element div = tr.select("div").first();
-                    Elements links = div.select("a");
-                    int imageIndex = 1;
-                    for (Element link : links) {
-                        // busstop image
-                        BusStopImage image = new BusStopImage();
-                        image.setBusStop(stop);
-                        image.setImageIndex(imageIndex);
-                        image.setImageName(link.attr("href"));
-                        // save data
-                        databaseManager.insertBusStopImage(image);
-                        imageIndex += 1;
-                    }
-                    stopIndex += 1;
-                }
-                // update sync status
-                theBusLine.setLineSync(true);
-                databaseManager.updateBusLine(theBusLine);
-                // close database connection
-                databaseManager.closeDbConnections();
-                // stop animation & change image
-                context.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        theSync.setAnimation(null);
-                        theSync.setImageResource(R.drawable.done);
-                    }
-                });
-            }
-        }).start();
-    }
-
     @Override
     public long getItemId(int position) {
         BusLine item = getItem(position);
@@ -209,5 +148,74 @@ public class SettingsSyncAdapter extends ArrayAdapter<BusLine> {
     static class SyncViewHolder {
         public TextView busLine;
         public ImageView sync;
+    }
+
+    private class JsoupParseBusLineHtmlThread implements Runnable{
+
+        private String html;
+
+        private BusLine busLine;
+
+        private ImageView sync;
+
+        public JsoupParseBusLineHtmlThread(BusLine busLine, String html, ImageView sync){
+            this.busLine = busLine;
+            this.html = html;
+            this.sync = sync;
+        }
+
+        @Override
+        public void run() {
+            Document doc = Jsoup.parse(html);
+            int stopIndex = 1;
+            Element table = doc.select("table[style=border-collapse:collapse]").first();
+            Element tbody = table.select("tbody").first();
+            Elements trs = tbody.select("tr");
+            // connect to database
+            DatabaseManager databaseManager = new DatabaseManager(getContext());
+            // parse data
+            for (Element tr : trs) {
+                Elements tds = tr.select("td");
+                // busstop
+                BusStop stop = new BusStop();
+                stop.setBusLine(busLine);
+                stop.setStopIndex(stopIndex);
+                stop.setStopName(tds.get(0).text().trim());
+                stop.setStopDesc(tds.get(1).text().trim());
+                stop.setClass07(tds.get(2).text().trim());
+                stop.setClass09(tds.get(3).text().trim());
+                stop.setClass13(tds.get(4).text().trim());
+                stop.setClass17(tds.get(5).text().trim());
+                // save data
+                databaseManager.insertBusStop(stop);
+                Element div = tr.select("div").first();
+                Elements links = div.select("a");
+                int imageIndex = 1;
+                for (Element link : links) {
+                    // busstop image
+                    BusStopImage image = new BusStopImage();
+                    image.setBusStop(stop);
+                    image.setImageIndex(imageIndex);
+                    image.setImageName(link.attr("href"));
+                    // save data
+                    databaseManager.insertBusStopImage(image);
+                    imageIndex += 1;
+                }
+                stopIndex += 1;
+            }
+            // update sync status
+            busLine.setLineSync(true);
+            databaseManager.updateBusLine(busLine);
+            // close database connection
+            databaseManager.closeDbConnections();
+            // stop animation & change image
+            sync.post(new Runnable() {
+                @Override
+                public void run() {
+                    sync.setAnimation(null);
+                    sync.setImageResource(R.drawable.done);
+                }
+            });
+        }
     }
 }

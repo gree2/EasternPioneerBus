@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.hql.gree2.easternpioneerbus.app.AppController;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.fb.FeedbackAgent;
 
 
 public class SettingsActivity extends Activity {
@@ -18,6 +19,7 @@ public class SettingsActivity extends Activity {
     static class SettingViewHolder {
         public RelativeLayout layoutSync;
         public RelativeLayout layoutCache;
+        public RelativeLayout layoutFeedback;
     }
 
     @Override
@@ -28,6 +30,7 @@ public class SettingsActivity extends Activity {
         SettingViewHolder holder = new SettingViewHolder();
         holder.layoutSync = (RelativeLayout) findViewById(R.id.layout_sync);
         holder.layoutCache = (RelativeLayout) findViewById(R.id.layout_clear);
+        holder.layoutFeedback = (RelativeLayout) findViewById(R.id.layout_feedback);
 
         holder.layoutSync.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,6 +48,19 @@ public class SettingsActivity extends Activity {
             }
         });
 
+        holder.layoutFeedback.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                DoFeedback();
+            }
+        });
+
+    }
+
+    private void DoFeedback() {
+        FeedbackAgent agent = new FeedbackAgent(this);
+        agent.startFeedbackActivity();
     }
 
     private void DoClearCache() {

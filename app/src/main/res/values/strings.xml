@@ -38,9 +38,11 @@
     <string name="description_zoom_touch_close">点击图片返回</string>
     <string name="title_activity_settings">设置</string>
     <string name="title_activity_settings_sync">下载线路数据</string>
+    <string name="title_activity_feedback">用户反馈</string>
 
-    <string name="sync_data">下载线路数据</string>
-    <string name="clear_cache">清除图片缓存</string>
+    <string name="activity_settings_text_sync_data">下载线路数据</string>
+    <string name="activity_settings_text_clear_cache">清除图片缓存</string>
+    <string name="activity_settings_text_feedback">用户反馈</string>
     <string name="clear_cache_question">确实要清除缓存数据？</string>
     <string name="clear_cache_yes">确定</string>
     <string name="clear_cache_no">取消</string>

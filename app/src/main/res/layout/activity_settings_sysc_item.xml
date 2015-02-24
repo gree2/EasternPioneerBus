@@ -19,7 +19,7 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="10dp"
         android:layout_toRightOf="@id/bus_line_image"
-        android:text="@string/sync_data" />
+        android:text="@string/activity_settings_text_sync_data" />
 
     <ImageView
         android:id="@+id/bus_line_sync"

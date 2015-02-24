@@ -31,7 +31,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@id/sync_image"
-                android:text="@string/sync_data" />
+                android:text="@string/activity_settings_text_sync_data" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -71,7 +71,37 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@id/clear_cache_image"
-                android:text="@string/clear_cache" />
+                android:text="@string/activity_settings_text_clear_cache" />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/devide_line" />
+
+        <RelativeLayout
+            android:id="@+id/layout_feedback"
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+
+            <ImageView
+                android:id="@+id/headset_mic_image"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/headset_mic" />
+
+            <TextView
+                android:id="@+id/headset_mic_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@id/headset_mic_image"
+                android:text="@string/activity_settings_text_feedback" />
 
         </RelativeLayout>
 

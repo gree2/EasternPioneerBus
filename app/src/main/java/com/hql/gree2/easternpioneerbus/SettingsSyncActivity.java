@@ -8,6 +8,7 @@ import com.hql.gree2.easternpioneerbus.adapter.SettingsSyncAdapter;
 import com.hql.gree2.easternpioneerbus.dao.BusLine;
 import com.hql.gree2.easternpioneerbus.manager.DatabaseManager;
 import com.hql.gree2.easternpioneerbus.manager.IDatabaseManager;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +64,9 @@ public class SettingsSyncActivity extends Activity {
         // init database manager
         databaseManager = DatabaseManager.getInstance(this);
         super.onResume();
+        // umeng
+        MobclickAgent.onPageStart("SettingsSyncActivity");
+        MobclickAgent.onResume(this);
     }
 
     @Override
@@ -78,5 +82,8 @@ public class SettingsSyncActivity extends Activity {
         // animation
         overridePendingTransition(R.anim.anim_slide_hold, R.anim.anim_slide_out);
         super.onPause();
+        // umeng
+        MobclickAgent.onPageEnd("SettingsSyncActivity");
+        MobclickAgent.onPause(this);
     }
 }

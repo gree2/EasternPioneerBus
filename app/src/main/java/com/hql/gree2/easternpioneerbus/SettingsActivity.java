@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.hql.gree2.easternpioneerbus.app.AppController;
+import com.umeng.analytics.MobclickAgent;
 
 
 public class SettingsActivity extends Activity {
@@ -71,5 +72,21 @@ public class SettingsActivity extends Activity {
             }
         }
     };
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // umeng
+        MobclickAgent.onPageStart("SettingsActivity");
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // umeng
+        MobclickAgent.onPageEnd("SettingsActivity");
+        MobclickAgent.onPause(this);
+    }
 
 }

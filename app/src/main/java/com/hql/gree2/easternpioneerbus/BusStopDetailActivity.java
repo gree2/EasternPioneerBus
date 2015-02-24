@@ -27,6 +27,7 @@ import com.hql.gree2.easternpioneerbus.dao.BusStopImage;
 import com.hql.gree2.easternpioneerbus.manager.DatabaseManager;
 import com.hql.gree2.easternpioneerbus.manager.IDatabaseManager;
 import com.hql.gree2.easternpioneerbus.volley.util.Const;
+import com.umeng.analytics.MobclickAgent;
 
 
 public class BusStopDetailActivity extends FragmentActivity {
@@ -295,9 +296,21 @@ public class BusStopDetailActivity extends FragmentActivity {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        // umeng
+        MobclickAgent.onPageStart("BusStopDetailActivity");
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
     protected void onPause() {
         // animation
         overridePendingTransition(R.anim.anim_slide_hold, R.anim.anim_slide_out);
         super.onPause();
+        // umeng
+        MobclickAgent.onPageEnd("BusStopDetailActivity");
+        MobclickAgent.onPause(this);
     }
+
 }

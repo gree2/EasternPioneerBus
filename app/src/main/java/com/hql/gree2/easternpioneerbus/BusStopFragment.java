@@ -13,6 +13,7 @@ import com.hql.gree2.easternpioneerbus.adapter.BusStopAdapter;
 import com.hql.gree2.easternpioneerbus.dao.BusStop;
 import com.hql.gree2.easternpioneerbus.manager.DatabaseManager;
 import com.hql.gree2.easternpioneerbus.manager.IDatabaseManager;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.List;
 
@@ -52,4 +53,15 @@ public class BusStopFragment extends Fragment implements AdapterView.OnItemClick
         intent.putExtra("BusStopId", ((BusStop) adapter.getItem(position)).getId());
         startActivity(intent);
     }
+
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart("MainActivity");
+    }
+
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd("MainActivity");
+    }
+
 }

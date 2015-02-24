@@ -3,11 +3,13 @@ package com.hql.gree2.easternpioneerbus;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,6 +22,7 @@ import com.hql.gree2.easternpioneerbus.dao.BusLine;
 import com.hql.gree2.easternpioneerbus.manager.DatabaseManager;
 import com.hql.gree2.easternpioneerbus.manager.IDatabaseManager;
 import com.hql.gree2.easternpioneerbus.model.NavDrawerItem;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +53,10 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        // umeng
+        MobclickAgent.updateOnlineConfig(this);
+        // regist test device
+        Log.d("regist test device", getDeviceInfo(this));
 
         // findview
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -232,6 +239,15 @@ public class MainActivity extends Activity {
         // init database manager
         databaseManager = DatabaseManager.getInstance(this);
         super.onResume();
+        // umeng
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // umeng
+        MobclickAgent.onPause(this);
     }
 
     @Override
@@ -240,5 +256,35 @@ public class MainActivity extends Activity {
             databaseManager.closeDbConnections();
         }
         super.onStop();
+    }
+
+    public static String getDeviceInfo(Context context) {
+        try{
+            org.json.JSONObject json = new org.json.JSONObject();
+            android.telephony.TelephonyManager tm = (android.telephony.TelephonyManager) context
+                    .getSystemService(Context.TELEPHONY_SERVICE);
+
+            String device_id = tm.getDeviceId();
+
+            android.net.wifi.WifiManager wifi = (android.net.wifi.WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+
+            String mac = wifi.getConnectionInfo().getMacAddress();
+            json.put("mac", mac);
+
+            if( TextUtils.isEmpty(device_id) ){
+                device_id = mac;
+            }
+
+            if( TextUtils.isEmpty(device_id) ){
+                device_id = android.provider.Settings.Secure.getString(context.getContentResolver(),android.provider.Settings.Secure.ANDROID_ID);
+            }
+
+            json.put("device_id", device_id);
+
+            return json.toString();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 }

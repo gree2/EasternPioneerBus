@@ -2,7 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.hql.gree2.easternpioneerbus">
 
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
     <application
         android:name=".app.AppController"
@@ -26,6 +29,9 @@
         <activity
             android:name=".SettingsSyncActivity"
             android:label="@string/title_activity_settings_sync"/>
+
+        <meta-data android:name="UMENG_APPKEY" android:value="54ec21fdfd98c5b168000500"/>
+        <meta-data android:name="UMENG_CHANNEL" android:value="github" />
     </application>
 
 </manifest>

@@ -8,6 +8,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 import com.hql.gree2.easternpioneerbus.volley.util.LruBitmapCache;
+import com.umeng.analytics.MobclickAgent;
 
 
 public class AppController extends Application {
@@ -22,6 +23,8 @@ public class AppController extends Application {
     public void onCreate() {
         super.onCreate();
         mInstance = this;
+        // umeng
+        MobclickAgent.openActivityDurationTrack(false);
     }
 
     public static synchronized AppController getInstance() {

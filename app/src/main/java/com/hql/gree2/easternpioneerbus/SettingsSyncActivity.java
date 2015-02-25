@@ -9,6 +9,7 @@ import com.hql.gree2.easternpioneerbus.dao.BusLine;
 import com.hql.gree2.easternpioneerbus.manager.DatabaseManager;
 import com.hql.gree2.easternpioneerbus.manager.IDatabaseManager;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.message.PushAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,8 @@ public class SettingsSyncActivity extends Activity {
         // animation
         overridePendingTransition(R.anim.anim_slide_in, R.anim.anim_slide_hold);
         setContentView(R.layout.activity_settings_sync);
+        // umeng
+        PushAgent.getInstance(this).onAppStart();
 
         // init database manager
         databaseManager = new DatabaseManager(this);

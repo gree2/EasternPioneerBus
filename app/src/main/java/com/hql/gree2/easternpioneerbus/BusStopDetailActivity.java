@@ -28,6 +28,7 @@ import com.hql.gree2.easternpioneerbus.manager.DatabaseManager;
 import com.hql.gree2.easternpioneerbus.manager.IDatabaseManager;
 import com.hql.gree2.easternpioneerbus.volley.util.Const;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.message.PushAgent;
 
 
 public class BusStopDetailActivity extends FragmentActivity {
@@ -53,6 +54,8 @@ public class BusStopDetailActivity extends FragmentActivity {
         // animation
         overridePendingTransition(R.anim.anim_slide_in, R.anim.anim_slide_hold);
         setContentView(R.layout.activity_bus_stop_detail);
+        // umeng
+        PushAgent.getInstance(this).onAppStart();
 
         // init database & busline
         IDatabaseManager databaseManager = new DatabaseManager(this);

@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.hql.gree2.easternpioneerbus.app.AppController;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.fb.FeedbackAgent;
+import com.umeng.message.PushAgent;
 
 
 public class SettingsActivity extends Activity {
@@ -26,6 +27,8 @@ public class SettingsActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+        // umeng
+        PushAgent.getInstance(this).onAppStart();
 
         SettingViewHolder holder = new SettingViewHolder();
         holder.layoutSync = (RelativeLayout) findViewById(R.id.layout_sync);

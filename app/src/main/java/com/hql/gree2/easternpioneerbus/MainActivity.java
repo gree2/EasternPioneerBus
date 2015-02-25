@@ -23,6 +23,8 @@ import com.hql.gree2.easternpioneerbus.manager.DatabaseManager;
 import com.hql.gree2.easternpioneerbus.manager.IDatabaseManager;
 import com.hql.gree2.easternpioneerbus.model.NavDrawerItem;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.message.PushAgent;
+import com.umeng.message.UmengRegistrar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,8 +57,17 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         // umeng
         MobclickAgent.updateOnlineConfig(this);
-        // regist test device
-        Log.d("regist test device", getDeviceInfo(this));
+        PushAgent pushAgent = PushAgent.getInstance(this);
+        pushAgent.enable();
+        PushAgent.getInstance(this).onAppStart();
+        boolean isEnabled = pushAgent.isEnabled();
+        Log.d("Push Enabled", isEnabled ? "ture" : "false");
+        // device info & token
+        Log.d("Device Info ", getDeviceInfo(this));
+        String deviceToken = UmengRegistrar.getRegistrationId(this);
+        if (null != deviceToken) {
+            Log.d("Device Token", UmengRegistrar.getRegistrationId(this));
+        }
 
         // findview
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -259,7 +270,7 @@ public class MainActivity extends Activity {
     }
 
     public static String getDeviceInfo(Context context) {
-        try{
+        try {
             org.json.JSONObject json = new org.json.JSONObject();
             android.telephony.TelephonyManager tm = (android.telephony.TelephonyManager) context
                     .getSystemService(Context.TELEPHONY_SERVICE);
@@ -271,18 +282,18 @@ public class MainActivity extends Activity {
             String mac = wifi.getConnectionInfo().getMacAddress();
             json.put("mac", mac);
 
-            if( TextUtils.isEmpty(device_id) ){
+            if (TextUtils.isEmpty(device_id)) {
                 device_id = mac;
             }
 
-            if( TextUtils.isEmpty(device_id) ){
-                device_id = android.provider.Settings.Secure.getString(context.getContentResolver(),android.provider.Settings.Secure.ANDROID_ID);
+            if (TextUtils.isEmpty(device_id)) {
+                device_id = android.provider.Settings.Secure.getString(context.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
             }
 
             json.put("device_id", device_id);
 
             return json.toString();
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;

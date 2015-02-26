@@ -2,7 +2,6 @@ language: android
 jdk: oraclejdk7
 env:
   matrix:
-  - ANDROID_SDKS=android-14 ANDROID_TARGET=android-19 ANDROID_ABI=armeabi-v7a
   - ANDROID_SDKS=android-21 ANDROID_TARGET=android-19 ANDROID_ABI=armeabi-v7a
   global:
   - secure: Yg5HqPd150G4LnXk5Wb3SrkAVthOW5NiUenBSf+pqugGAXkCShZ37E70Zyp7ui+NIYmYzOQ7hdXHVxKx3tv+XM23XekcVhVkes1z0P1uKpItIMsC6HwaZEH1bEsE9do0y8twtS63Tf4dAW8hz8wDF/0s/qu+S9APfAgmxrJFNNg=
@@ -17,7 +16,7 @@ before_install:
 - tar xzf android-sdk_r21.0.1-linux.tgz
 - export ANDROID_HOME=$PWD/android-sdk-linux
 - export PATH=${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
-- android update sdk --filter platform-tools,extra-android-support,$ANDROID_SDKS --no-ui --force
+- android update sdk --no-ui --force
 - find ~ -name "android-sdk-linux" -ls
 before_script:
 - wget http://services.gradle.org/distributions/gradle-2.2-bin.zip

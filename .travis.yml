@@ -7,15 +7,23 @@ android:
   components:
   - build-tools-21.1.1
 before_script:
-- echo no | android create avd --force -n test -t $ANDROID_TARGET --abi $ANDROID_ABI
-- emulator -avd test -no-skin -no-audio -no-window &
-- adb wait-for-device
-- adb shell input keyevent 82 &
-- wget http://services.gradle.org/distributions/gradle-2.2-bin.zip
-- unzip gradle-2.2-bin.zip
-- export GRADLE_HOME=$PWD/gradle-2.2
-- export PATH=$GRADLE_HOME/bin:$PATH
+  - echo no | android create avd --force -n test -t $ANDROID_TARGET --abi $ANDROID_ABI
+  - emulator -avd test -no-skin -no-audio -no-window &
+  - adb wait-for-device
+  - adb shell input keyevent 82 &
+  - wget http://services.gradle.org/distributions/gradle-2.2-bin.zip
+  - unzip gradle-2.2-bin.zip
+  - export GRADLE_HOME=$PWD/gradle-2.2
+  - export PATH=$GRADLE_HOME/bin:$PATH
 script: gradle assemble
+before_deploy:
+  - ls -R
+  - git config --global user.email "hqlgree2@gmail.com"
+  - git config --global user.name "hqlgree2_ci"
+  - export GIT_TAG=$TRAVIS_BRANCH-0.1.$TRAVIS_BUILD_NUMBER
+  - git tag $GIT_TAG -a -m "Generated tag from TravisCI for build $TRAVIS_BUILD_NUMBER"
+  - git push -q https://$TAGPERM@github.com/gree2/EasternPioneerBus --tags
+  - ls -R
 deploy:
   api-key:
     secure: dh9Ei+jKIyRRZ6iC6X5FvlAvElxJFieRVDbvr9c09hNZmz0HT9Tay3q66bqa3p7XGZUA9hRPUW3hVnX/vTJzwmEkYZMd5ehTi7Cmjg8gIFl3cs7fBkHMJ6fivyCYw8X/AbPLxQzsSeQh74n09a8cXbFg6z/GPgTsRUO2YDVgon0=
@@ -23,4 +31,8 @@ deploy:
   file: "app-debug.apk"
   skip_cleanup: true
   on:
-    tags: true
+    tags: false
+    all_branches: true
+branches:
+  except:
+    - /^*-v[0-9]/

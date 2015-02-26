@@ -4,15 +4,12 @@ env:
   matrix:
   - ANDROID_TARGET=android-19  ANDROID_ABI=armeabi-v7a
   global:
-    secure: Yg5HqPd150G4LnXk5Wb3SrkAVthOW5NiUenBSf+pqugGAXkCShZ37E70Zyp7ui+NIYmYzOQ7hdXHVxKx3tv+XM23XekcVhVkes1z0P1uKpItIMsC6HwaZEH1bEsE9do0y8twtS63Tf4dAW8hz8wDF/0s/qu+S9APfAgmxrJFNNg=
+  - secure: Yg5HqPd150G4LnXk5Wb3SrkAVthOW5NiUenBSf+pqugGAXkCShZ37E70Zyp7ui+NIYmYzOQ7hdXHVxKx3tv+XM23XekcVhVkes1z0P1uKpItIMsC6HwaZEH1bEsE9do0y8twtS63Tf4dAW8hz8wDF/0s/qu+S9APfAgmxrJFNNg=
+  - secure: CUJefuYqqBxbggV83polXcVJ1XWgLdfRB9AhVoLOs+uYoa11wfzkwM0aFb0KOCORtdUKNDsHetXtoDfu/yH9sGMqTuYJUnzzHMWme8fuaYzZb0U/WuksOrbSK+LnuHqEiENATSLUBGAK37JUlCFnaU/p1+RoH5wt5bSMl6FMus8=
 android:
   components:
   - build-tools-21.1.1
 before_script:
-- echo no | android create avd --force -n test -t $ANDROID_TARGET --abi $ANDROID_ABI
-- emulator -avd test -no-skin -no-audio -no-window &
-- adb wait-for-device
-- adb shell input keyevent 82 &
 - wget http://services.gradle.org/distributions/gradle-2.2-bin.zip
 - unzip gradle-2.2-bin.zip
 - export GRADLE_HOME=$PWD/gradle-2.2
@@ -24,14 +21,17 @@ before_deploy:
 - git config credential.helper "store --file=.git/credentials"
 - echo "https://${GH_TOKEN}:@github.com" > .git/credentials
 - export GIT_TAG=$TRAVIS_BRANCH-0.1.$TRAVIS_BUILD_NUMBER
-- git tag $GIT_TAG -a -m "Generated tag from TravisCI for build $TRAVIS_BUILD_NUMBER"
+- git tag $GIT_TAG -a -m "auto release from TravisCI for build $TRAVIS_BUILD_NUMBER"
 - git push -q https://github.com/gree2/EasternPioneerBus --tags
-- ls -R | grep apk
+- export APK_FN=EasternPioneerBus-0.1.$TRAVIS_BUILD_NUMBER
+- mv ./app/build/outputs/apk/app-release-unsigned.apk ./${APK_FN}-unaligned.apk
+- jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -tsa http://timestamp.digicert.com -keystore epb.keystore -storepass $STOREPASS ./${APK_FN}-unaligned.apk epb
+- zipalign -v 4 ./${APK_FN}-unaligned.apk ./${APK_FN}.apk
 deploy:
   api-key:
     secure: dh9Ei+jKIyRRZ6iC6X5FvlAvElxJFieRVDbvr9c09hNZmz0HT9Tay3q66bqa3p7XGZUA9hRPUW3hVnX/vTJzwmEkYZMd5ehTi7Cmjg8gIFl3cs7fBkHMJ6fivyCYw8X/AbPLxQzsSeQh74n09a8cXbFg6z/GPgTsRUO2YDVgon0=
   provider: releases
-  file: ./app/build/outputs/apk/app-release-unsigned.apk
+  file: "./${APK_FN}.apk"
   skip_cleanup: true
   on:
     tags: false

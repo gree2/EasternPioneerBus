@@ -3,35 +3,39 @@ jdk: oraclejdk7
 env:
   matrix:
   - ANDROID_TARGET=android-19  ANDROID_ABI=armeabi-v7a
+  global:
+    secure: Yg5HqPd150G4LnXk5Wb3SrkAVthOW5NiUenBSf+pqugGAXkCShZ37E70Zyp7ui+NIYmYzOQ7hdXHVxKx3tv+XM23XekcVhVkes1z0P1uKpItIMsC6HwaZEH1bEsE9do0y8twtS63Tf4dAW8hz8wDF/0s/qu+S9APfAgmxrJFNNg=
 android:
   components:
   - build-tools-21.1.1
 before_script:
-  - echo no | android create avd --force -n test -t $ANDROID_TARGET --abi $ANDROID_ABI
-  - emulator -avd test -no-skin -no-audio -no-window &
-  - adb wait-for-device
-  - adb shell input keyevent 82 &
-  - wget http://services.gradle.org/distributions/gradle-2.2-bin.zip
-  - unzip gradle-2.2-bin.zip
-  - export GRADLE_HOME=$PWD/gradle-2.2
-  - export PATH=$GRADLE_HOME/bin:$PATH
+- echo no | android create avd --force -n test -t $ANDROID_TARGET --abi $ANDROID_ABI
+- emulator -avd test -no-skin -no-audio -no-window &
+- adb wait-for-device
+- adb shell input keyevent 82 &
+- wget http://services.gradle.org/distributions/gradle-2.2-bin.zip
+- unzip gradle-2.2-bin.zip
+- export GRADLE_HOME=$PWD/gradle-2.2
+- export PATH=$GRADLE_HOME/bin:$PATH
 script: gradle assemble
 before_deploy:
-  - git config --global user.email "hqlgree2@gmail.com"
-  - git config --global user.name "hqlgree2_ci"
-  - export GIT_TAG=$TRAVIS_BRANCH-0.1.$TRAVIS_BUILD_NUMBER
-  - git tag $GIT_TAG -a -m "Generated tag from TravisCI for build $TRAVIS_BUILD_NUMBER"
-  - git push -q https://gree2@github.com/gree2/EasternPioneerBus --tags
-  - ls -R | grep apk
+- git config --global user.email "hqlgree2@gmail.com"
+- git config --global user.name "hqlgree2_ci"
+- git config credential.helper "store --file=.git/credentials"
+- echo "https://${GH_TOKEN}:@github.com" > .git/credentials
+- export GIT_TAG=$TRAVIS_BRANCH-0.1.$TRAVIS_BUILD_NUMBER
+- git tag $GIT_TAG -a -m "Generated tag from TravisCI for build $TRAVIS_BUILD_NUMBER"
+- git push -q https://github.com/gree2/EasternPioneerBus --tags
+- ls -R | grep apk
 deploy:
   api-key:
     secure: dh9Ei+jKIyRRZ6iC6X5FvlAvElxJFieRVDbvr9c09hNZmz0HT9Tay3q66bqa3p7XGZUA9hRPUW3hVnX/vTJzwmEkYZMd5ehTi7Cmjg8gIFl3cs7fBkHMJ6fivyCYw8X/AbPLxQzsSeQh74n09a8cXbFg6z/GPgTsRUO2YDVgon0=
   provider: releases
-  file: "app-debug.apk"
+  file: ./app/build/outputs/apk/app-release-unsigned.apk
   skip_cleanup: true
   on:
     tags: false
     all_branches: true
 branches:
   except:
-    - /^*-v[0-9]/
+  - "/^*-v[0-9]/"

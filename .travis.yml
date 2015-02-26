@@ -14,6 +14,7 @@ before_script:
 - unzip gradle-2.2-bin.zip
 - export GRADLE_HOME=$PWD/gradle-2.2
 - export PATH=$GRADLE_HOME/bin:$PATH
+- ls ~ -R
 - find ~ -name "android-sdk-linux" -ls
 script: gradle assemble
 before_deploy:

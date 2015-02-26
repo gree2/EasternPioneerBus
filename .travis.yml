@@ -14,7 +14,7 @@ before_script:
 - unzip gradle-2.2-bin.zip
 - export GRADLE_HOME=$PWD/gradle-2.2
 - export PATH=$GRADLE_HOME/bin:$PATH
-- whereis android
+- ls ~/ -R | grep 'android-sdk-linux'
 script: gradle assemble
 before_deploy:
 - git config --global user.email "hqlgree2@gmail.com"

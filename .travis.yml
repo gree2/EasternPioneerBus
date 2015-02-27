@@ -8,6 +8,8 @@ env:
   - secure: CUJefuYqqBxbggV83polXcVJ1XWgLdfRB9AhVoLOs+uYoa11wfzkwM0aFb0KOCORtdUKNDsHetXtoDfu/yH9sGMqTuYJUnzzHMWme8fuaYzZb0U/WuksOrbSK+LnuHqEiENATSLUBGAK37JUlCFnaU/p1+RoH5wt5bSMl6FMus8=
 android:
   components:
+  - platform-tools
+  - tools
   - build-tools-21.1.1
 #before_install:
 #- sudo apt-get update -qq
@@ -23,7 +25,7 @@ before_script:
 - unzip gradle-2.2-bin.zip
 - export GRADLE_HOME=$PWD/gradle-2.2
 - export PATH=$GRADLE_HOME/bin:$PATH
-- sudo find / -name "android-sdk-linux" -ls
+- sudo find / -name "zipalign" -ls
 script: gradle assemble
 before_deploy:
 - git config --global user.email "hqlgree2@gmail.com"

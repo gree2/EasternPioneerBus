@@ -19,7 +19,7 @@ before_script:
 - sudo find / -name "zipalign"
 - export ZIPALIGN_HOME=/usr/local/android-sdk-24.0.2/build-tools/21.1.2/
 - export PATH=$ZIPALIGN_HOME:$PATH
-script: gradle assemble
+script: gradle assemble -PversionCode=$TRAVIS_BUILD_NUMBER -PversionName=0.1.$TRAVIS_BUILD_NUMBER
 before_deploy:
 - git config --global user.email "hqlgree2@gmail.com"
 - git config --global user.name "hqlgree2_ci"

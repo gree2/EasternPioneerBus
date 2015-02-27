@@ -8,8 +8,8 @@ android {
         applicationId "com.hql.gree2.easternpioneerbus"
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "0.1.53"
     }
     buildTypes {
         release {

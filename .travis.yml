@@ -21,6 +21,8 @@ before_script:
 - export PATH=$ZIPALIGN_HOME:$PATH
 script: gradle assemble -PversionCode=$TRAVIS_BUILD_NUMBER -PversionName=0.1.$TRAVIS_BUILD_NUMBER
 before_deploy:
+- git config --global user.email "hqlgree2@gmail.com"
+- git config --global user.name "hqlgree2_ci"
 - git config credential.helper "store --file=.git/credentials"
 - echo "https://${GH_TOKEN}:@github.com" > .git/credentials
 - export GIT_TAG=$TRAVIS_BRANCH-0.1.$TRAVIS_BUILD_NUMBER

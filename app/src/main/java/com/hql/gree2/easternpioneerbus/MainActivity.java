@@ -18,9 +18,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.hql.gree2.easternpioneerbus.adapter.NavDrawerListAdapter;
-import com.hql.gree2.easternpioneerbus.dao.BusLine;
-import com.hql.gree2.easternpioneerbus.manager.DatabaseManager;
-import com.hql.gree2.easternpioneerbus.manager.IDatabaseManager;
+import com.hql.gree2.easternpioneerbus.model.BusLine;
 import com.hql.gree2.easternpioneerbus.model.NavDrawerItem;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.PushAgent;
@@ -28,6 +26,10 @@ import com.umeng.message.UmengRegistrar;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.realm.Realm;
+import io.realm.RealmChangeListener;
+import io.realm.RealmResults;
 
 
 public class MainActivity extends Activity {
@@ -46,10 +48,7 @@ public class MainActivity extends Activity {
     private NavDrawerListAdapter adapter;
 
     //private BusStopUtil util;
-
-    private IDatabaseManager databaseManager;
-
-    private List<BusLine> busLines;
+    private RealmResults busLines;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,15 +72,27 @@ public class MainActivity extends Activity {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
 
-        // init database & busline
-        databaseManager = new DatabaseManager(this);
-        PopulateBusLines();
-
         mTitle = mDrawerTitle = getTitle();
         navDrawerItems = new ArrayList<>();
 
-        for (BusLine busLine : busLines) {
-            navDrawerItems.add(new NavDrawerItem(busLine.getLineName()));
+        final Realm realm = Realm.getInstance(this);
+        // after sync refresh ui
+        realm.addChangeListener(new RealmChangeListener() {
+            @Override
+            public void onChange() {
+                busLines = realm.where(BusLine.class).findAll();
+                busLines.sort("id");
+                for (Object object : busLines.toArray()) {
+                    navDrawerItems.add(new NavDrawerItem(((BusLine)object).getId() + " " + ((BusLine)object).getLineName()));
+                }
+                adapter.notifyDataSetChanged();
+            }
+        });
+
+        busLines = realm.where(BusLine.class).findAll();
+        busLines.sort("id");
+        for (Object object : busLines.toArray()) {
+            navDrawerItems.add(new NavDrawerItem(((BusLine)object).getId() + " " + ((BusLine)object).getLineName()));
         }
 
         mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
@@ -117,24 +128,6 @@ public class MainActivity extends Activity {
             // on first time display view for first nav item
             displayView(0);
         }
-    }
-
-    private void PopulateBusLines() {
-        busLines = databaseManager.listBusLines();
-        if (0 < busLines.size()) {
-            return;
-        }
-        String[] codeNames = getResources().getStringArray(R.array.bus_line_code_name);
-        for (int i = 0; i < codeNames.length; i++) {
-            String[] split = codeNames[i].split(",");
-            BusLine busLine = new BusLine();
-            busLine.setLineCode(split[0]);
-            busLine.setLineName(split[1]);
-            busLine.setLineIndex(i + 1);
-            busLine.setLineSync(false);
-            databaseManager.insertBusLine(busLine);
-        }
-        busLines = databaseManager.listBusLines();
     }
 
     /**
@@ -192,7 +185,7 @@ public class MainActivity extends Activity {
         Fragment fragment = null;
         if (0 <= position && position < busLines.size()) {
             Bundle bundle = new Bundle();
-            bundle.putLong("BusLineId", busLines.get(position).getId());
+            bundle.putLong("BusLineId", ((BusLine) busLines.get(position)).getId());
             fragment = new BusStopFragment();
             fragment.setArguments(bundle);
         }
@@ -205,7 +198,7 @@ public class MainActivity extends Activity {
             // update selected item and title, then close the drawer
             mDrawerList.setItemChecked(position, true);
             mDrawerList.setSelection(position);
-            setTitle(busLines.get(position).getLineName());
+            setTitle(((BusLine)busLines.get(position)).getLineName());
             mDrawerLayout.closeDrawer(mDrawerList);
         } else {
             // error in creating fragment
@@ -238,17 +231,7 @@ public class MainActivity extends Activity {
     }
 
     @Override
-    protected void onRestart() {
-        if (databaseManager == null) {
-            databaseManager = new DatabaseManager(this);
-        }
-        super.onRestart();
-    }
-
-    @Override
     protected void onResume() {
-        // init database manager
-        databaseManager = DatabaseManager.getInstance(this);
         super.onResume();
         // umeng
         MobclickAgent.onResume(this);
@@ -259,14 +242,6 @@ public class MainActivity extends Activity {
         super.onPause();
         // umeng
         MobclickAgent.onPause(this);
-    }
-
-    @Override
-    protected void onStop() {
-        if (databaseManager != null) {
-            databaseManager.closeDbConnections();
-        }
-        super.onStop();
     }
 
     public static String getDeviceInfo(Context context) {

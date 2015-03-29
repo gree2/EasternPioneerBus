@@ -22,13 +22,11 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.hql.gree2.easternpioneerbus.app.AppController;
-import com.hql.gree2.easternpioneerbus.dao.BusStop;
-import com.hql.gree2.easternpioneerbus.dao.BusStopImage;
-import com.hql.gree2.easternpioneerbus.manager.DatabaseManager;
-import com.hql.gree2.easternpioneerbus.manager.IDatabaseManager;
-import com.hql.gree2.easternpioneerbus.volley.util.Const;
+import com.hql.gree2.easternpioneerbus.model.BusStop;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.PushAgent;
+
+import io.realm.Realm;
 
 
 public class BusStopDetailActivity extends FragmentActivity {
@@ -58,9 +56,9 @@ public class BusStopDetailActivity extends FragmentActivity {
         PushAgent.getInstance(this).onAppStart();
 
         // init database & busline
-        IDatabaseManager databaseManager = new DatabaseManager(this);
         long busStopId = getIntent().getLongExtra("BusStopId", -1);
-        busStop = databaseManager.getBusStopById(busStopId);
+        Realm realm = Realm.getInstance(this);
+        busStop = realm.where(BusStop.class).equalTo("id", busStopId).findFirst();
 
         TextView view = (TextView) findViewById(R.id.class_07_text);
         view.setText(getString(R.string.class_07) + busStop.getClass07());
@@ -77,7 +75,7 @@ public class BusStopDetailActivity extends FragmentActivity {
         view = (TextView) findViewById(R.id.stop_detail_text);
         view.setText(getString(R.string.stop_desc) + busStop.getStopDesc());
 
-        setTitle(busStop.getBusLine().getLineName() + "-" + busStop.getStopName());
+        setTitle(busStop.getStopIndex() + " " + busStop.getStopName());
 
         // Hook up clicks on the thumbnail views.
         AddAllButton();
@@ -90,33 +88,31 @@ public class BusStopDetailActivity extends FragmentActivity {
     public void AddAllButton() {
 
         // no image
-        if (0 == busStop.getBusStopImages().size()) {
+        if (0 == busStop.getStopImage().length())
+        {
             RelativeLayout layout = (RelativeLayout) findViewById(R.id.relative_visibility);
             layout.setVisibility(View.INVISIBLE);
 
             View view = findViewById(R.id.view_visibility);
             view.setVisibility(View.INVISIBLE);
-
             return;
         }
 
         // do have some images
         LinearLayout linearLayout = (LinearLayout) findViewById(R.id.linera_layout);
-        for (BusStopImage image : busStop.getBusStopImages()) {
-
-            final String url = Const.URL_IMAGE + image.getImageName();
-            // click to see big image
-            final TouchHighlightImageButton thumbView = new TouchHighlightImageButton(this);
-            thumbView.setImageResource(R.drawable.directions_bus);
-            thumbView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-            thumbView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    zoomImageFromThumb(thumbView, url);
-                }
-            });
-            linearLayout.addView(thumbView, new ViewGroup.LayoutParams(100, 100));
-        }
+        final String url = busStop.getStopImage();
+        // click to see big image
+        final TouchHighlightImageButton thumbView = new TouchHighlightImageButton(this);
+        thumbView.setImageResource(R.drawable.directions_bus);
+        thumbView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        thumbView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "load image for " + url);
+                zoomImageFromThumb(thumbView, url);
+            }
+        });
+        linearLayout.addView(thumbView, new ViewGroup.LayoutParams(100, 100));
     }
 
     @Override

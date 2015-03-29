@@ -4,51 +4,46 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.hql.gree2.easternpioneerbus.R;
-import com.hql.gree2.easternpioneerbus.dao.BusStop;
+import com.hql.gree2.easternpioneerbus.model.BusStop;
+import io.realm.RealmBaseAdapter;
+import io.realm.RealmResults;
 
-import java.util.List;
 
-public class BusStopAdapter extends BaseAdapter {
+public class BusStopAdapter extends RealmBaseAdapter<BusStop> implements ListAdapter {
 
-    private Context context;
-
-    private List<BusStop> items;
-
-    public BusStopAdapter(Context context, List<BusStop> items) {
-        this.context = context;
-        this.items = items;
+    private static class ViewHolder {
+        TextView stopName;
     }
 
-    @Override
-    public int getCount() {
-        return items.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return items.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
+    public BusStopAdapter(Context context, RealmResults<BusStop> realmResults, boolean automaticUpdate) {
+        super(context, realmResults, automaticUpdate);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if (null == convertView) {
+        ViewHolder viewHolder;
+        if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) this.context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.fragment_bus_stop_item, parent, false);
+            viewHolder = new ViewHolder();
+            viewHolder.stopName = (TextView) convertView.findViewById(R.id.stop_name);
+            convertView.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        TextView stopName = (TextView) convertView.findViewById(R.id.stop_name);
-        stopName.setText(items.get(position).getStopIndex() + "-" + items.get(position).getStopName());
-
+        BusStop busStop = realmResults.get(position);
+        viewHolder.stopName.setText(busStop.getStopIndex() + " " + busStop.getStopName());
         return convertView;
     }
+
+    public RealmResults<BusStop> getRealmResults() {
+        return realmResults;
+    }
+
 }

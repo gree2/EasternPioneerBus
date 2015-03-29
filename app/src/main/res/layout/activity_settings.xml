@@ -34,6 +34,7 @@
                 android:text="@string/activity_settings_text_sync_data" />
 
             <ImageView
+                android:id="@+id/sync_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
@@ -41,7 +42,7 @@
                 android:layout_marginRight="10dp"
                 android:contentDescription="@string/app_name"
                 android:scaleType="fitXY"
-                android:src="@drawable/keyboard_arrow_right" />
+                android:src="@drawable/sync" />
 
         </RelativeLayout>
 

@@ -10,12 +10,12 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.hql.gree2.easternpioneerbus.adapter.BusStopAdapter;
-import com.hql.gree2.easternpioneerbus.dao.BusStop;
-import com.hql.gree2.easternpioneerbus.manager.DatabaseManager;
-import com.hql.gree2.easternpioneerbus.manager.IDatabaseManager;
+import com.hql.gree2.easternpioneerbus.model.BusStop;
 import com.umeng.analytics.MobclickAgent;
 
-import java.util.List;
+
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 public class BusStopFragment extends Fragment implements AdapterView.OnItemClickListener {
 
@@ -32,11 +32,11 @@ public class BusStopFragment extends Fragment implements AdapterView.OnItemClick
         View rootView = inflater.inflate(R.layout.fragment_bus_stop, container, false);
 
         // init database & busline
-        IDatabaseManager databaseManager = new DatabaseManager(getActivity());
         long busLineId = getArguments().getLong("BusLineId");
-        List<BusStop> busStops = databaseManager.listBusStops(busLineId);
-
-        adapter = new BusStopAdapter(getActivity(), busStops);
+        Realm realm = Realm.getInstance(getActivity());
+        RealmResults<BusStop> busStops = realm.where(BusStop.class).equalTo("busLineId", busLineId).findAll();
+        busStops.sort("stopIndex");
+        adapter = new BusStopAdapter(getActivity(), busStops, true);
         ListView busStopListView = (ListView) rootView.findViewById(R.id.stops_list);
         busStopListView.setAdapter(adapter);
         busStopListView.setOnItemClickListener(this);
